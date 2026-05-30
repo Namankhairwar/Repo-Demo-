@@ -1,6 +1,7 @@
 const display = document.getElementById("display");
 const keys = document.querySelector(".keys");
 const themeToggle = document.getElementById("theme-toggle");
+const DIVIDE_BY_ZERO_ERROR = "Cannot divide by zero";
 
 let current = "0";
 let previous = null;
@@ -21,7 +22,7 @@ function applyOperation(a, b, op) {
   if (op === "+") return a + b;
   if (op === "-") return a - b;
   if (op === "*") return a * b;
-  if (op === "/") return b === 0 ? "Error" : a / b;
+  if (op === "/") return b === 0 ? DIVIDE_BY_ZERO_ERROR : a / b;
   return b;
 }
 
@@ -31,8 +32,8 @@ function chooseOperator(nextOperator) {
     previous = Number(current);
   } else if (operator) {
     const result = applyOperation(previous, Number(current), operator);
-    if (result === "Error") {
-      current = "Error";
+    if (result === DIVIDE_BY_ZERO_ERROR) {
+      current = DIVIDE_BY_ZERO_ERROR;
       previous = null;
       operator = null;
       updateDisplay();
@@ -46,13 +47,13 @@ function chooseOperator(nextOperator) {
 }
 
 function inputNumber(value) {
-  if (current === "Error") current = "0";
+  if (current === DIVIDE_BY_ZERO_ERROR) current = "0";
   current = current === "0" ? value : current + value;
   updateDisplay();
 }
 
 function calculateResult() {
-  if (current === "Error") return;
+  if (current === DIVIDE_BY_ZERO_ERROR) return;
   if (operator === null || previous === null) return;
   current = String(applyOperation(previous, Number(current), operator));
   previous = null;
