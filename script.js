@@ -6,8 +6,8 @@ let current = "0";
 let previous = null;
 let operator = null;
 
-function updateDisplay() {
-  display.value = current;
+function updateDisplay(value = current) {
+  display.value = value;
 }
 
 function clearAll() {
@@ -21,27 +21,38 @@ function applyOperation(a, b, op) {
   if (op === "+") return a + b;
   if (op === "-") return a - b;
   if (op === "*") return a * b;
-  if (op === "/") return b === 0 ? 0 : a / b;
+  if (op === "/") return b === 0 ? "Error" : a / b;
   return b;
 }
 
 function chooseOperator(nextOperator) {
+  if (current === "Error") return;
   if (previous === null) {
     previous = Number(current);
   } else if (operator) {
-    previous = applyOperation(previous, Number(current), operator);
+    const result = applyOperation(previous, Number(current), operator);
+    if (result === "Error") {
+      current = "Error";
+      previous = null;
+      operator = null;
+      updateDisplay();
+      return;
+    }
+    previous = result;
   }
   operator = nextOperator;
   current = "0";
-  updateDisplay();
+  updateDisplay(`${previous} ${operator}`);
 }
 
 function inputNumber(value) {
+  if (current === "Error") current = "0";
   current = current === "0" ? value : current + value;
   updateDisplay();
 }
 
 function calculateResult() {
+  if (current === "Error") return;
   if (operator === null || previous === null) return;
   current = String(applyOperation(previous, Number(current), operator));
   previous = null;
