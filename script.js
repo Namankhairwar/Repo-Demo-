@@ -27,7 +27,7 @@ function applyOperation(a, b, op) {
 }
 
 function chooseOperator(nextOperator) {
-  if (current === "Error") return;
+  if (current === DIVIDE_BY_ZERO_ERROR) return;
   if (previous === null) {
     previous = Number(current);
   } else if (operator) {
